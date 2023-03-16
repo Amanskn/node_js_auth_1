@@ -113,6 +113,51 @@ class UserController{
             
         }
     }
+
+
+
+
+    static changeUserPassword = async (req,res)=>{
+        const {password, password_confirmation} = req.body;
+        if(password && password_confirmation){
+            if(password === password_confirmation){
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(password, salt);
+
+                // below three methodology are achieving the same goal at the end but I want to know the difference between them
+
+                // 1st one
+                // let user = await UserModel.findById(req.user._id);
+                // user.password=hashedPassword;
+                // user.save();
+
+
+                // 2nd one
+                // await UserModel.findByIdAndUpdate(req.user._id, { $set: { password: hashedPassword }});
+
+
+                // 3rd one
+                await UserModel.findByIdAndUpdate(req.user._id, { password: hashedPassword });
+
+                return res.status(200).json({
+                    message:'Password changed successfully'
+                })
+
+
+            }else{
+                return res.status(200).json({
+                    message:'password and confirm password do not match'
+                })
+            }
+
+
+
+        }else{
+            return res.status(200).json({
+                message:'All fields are required'
+            })
+        }
+    }
 }
 
 export default UserController;
