@@ -13,6 +13,7 @@ router.use('/changepassword',checkUserAuth);
 
 router.post('/register',userController.userRegistration);
 router.post('/login',userController.userLogin);
+router.post('/send-reset-password-email',userController.sendUserPasswordResetEmail);
 
 
 // these are private routes
