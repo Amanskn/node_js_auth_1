@@ -158,6 +158,35 @@ class UserController{
             })
         }
     }
+
+
+
+    static loggedUser = async (req,res)=>{
+
+
+        // my code 
+        // if(req.user){
+
+        //     let user = await UserModel.findById(req.user._id).select('-password');;
+        //     return res.status(200).json({
+        //         message:user
+        //     })
+        // }
+        // else{
+        //     return res.status(200).json({
+        //         message:'Not an authenticated user'
+        //     })
+        // }
+
+
+        // efficient code 
+        return res.status(200).json({
+            message:'user_info_is',
+            user:req.user
+        })
+    }
+
+
 }
 
 export default UserController;

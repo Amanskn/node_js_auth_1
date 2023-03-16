@@ -7,6 +7,7 @@ import checkUserAuth from '../middlewares/auth-middleware.js';
 
 // route level middlwares
 router.use('/changepassword',checkUserAuth);
+// router.use('/loggeduser',checkUserAuth);
 
 // these are public routes
 
@@ -18,6 +19,7 @@ router.post('/login',userController.userLogin);
 
 
 router.post('/changepassword',UserController.changeUserPassword);
+router.get('/loggeduser', checkUserAuth , UserController.loggedUser);
 
 export default router;
 
