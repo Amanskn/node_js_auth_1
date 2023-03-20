@@ -220,6 +220,63 @@ class UserController{
     }
 
 
+    static userPasswordReset = async (req,res)=>{
+
+        try {
+            const {password , password_confirmation} = req.body;
+        const {id,token} = req.params;
+        const user = await UserModel.findById(id);
+        if(user){
+            const new_secret = user._id + process.env.JWT_SECRET_KEY;
+            try {
+                jwt.verify(token,new_secret);
+                if(password && password_confirmation){
+
+                    if(password === password_confirmation){
+                        const salt = await bcrypt.genSalt(10);
+                        const hashedPassword = await bcrypt.hash(password, salt);
+                        await UserModel.findByIdAndUpdate(user._id,{password:hashedPassword});
+                        return res.status(200).json({
+                            message:"Password reset successfully"
+                        })
+                    
+                    }else{
+                        return res.status(200).json({
+                            message:"Password and confirm password do not match"
+                        })    
+                    }
+                }else{
+                    return res.status(200).json({
+                        message:"All fields are required"
+                    })
+                }
+                
+            } catch (error) {
+                return res.status(200).json({
+                    message:'Invalid token'
+                })
+            }
+
+        }else{
+            return res.status(200).json({
+                message:"User not found " 
+            })
+        }
+            
+            
+        } catch (error) {
+            return res.status(200).json({
+                message:'Inside catch',
+                Error:error
+
+            })
+        }
+        
+    
+        
+    }
+
+
 }
 
 export default UserController;
