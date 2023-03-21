@@ -23,5 +23,9 @@ router.post('/reset-password/:id/:token',userController.userPasswordReset);
 router.post('/changepassword',UserController.changeUserPassword);
 router.get('/loggeduser', checkUserAuth , UserController.loggedUser);
 
+
+// router.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}));
+// router.get('/auth/google/callback',passport.authenticate('google',{failureRedirect:'/users/sign-in'}),usersController.createSession);
+
 export default router;
 

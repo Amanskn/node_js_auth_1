@@ -1,6 +1,9 @@
 import UserModel from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import transporter from "./nodemailer.js";
+import dotenv from "dotenv"
+dotenv.config();
 
 class UserController{
     static userRegistration = async (req, res) => {
@@ -196,12 +199,23 @@ class UserController{
             
             if(user){
                 const secret = user._id + process.env.JWT_SECRET_KEY;
-                const token = jwt.sign({userID:user._id} , secret ,{expiresIn:'15m'});
+                const token = jwt.sign({userID:user._id} , secret ,{expiresIn:'1m'});
                 const link = `http://localhost:3000/api/user/reset/${user._id}/${token}`;
-                console.log(link);
+                // console.log(link);
+
+
+                // send mail with defined transport object
+                let info = await transporter.sendMail({
+                    from: process.env.FROM_EMAIL, // sender address
+                    to: user.email, // list of receivers
+                    subject: "Password Reset Email", // Subject line
+                    text: "Hello world?", // plain text body
+                    html: `<a href=${link}>Click here</a> to reset password before 1 min`, // html body
+                });
 
                 return res.status(200).json({
-                    message:'Password reset email sent... please check your email'
+                    message:'Password reset email sent... please check your email',
+                    info:info
                 });
 
 
